@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import CurrencyInput from "react-currency-input-field";
 import { Info, MinusCircle, PlusCircle } from "lucide-react";
 
@@ -11,9 +12,10 @@ import { cn } from "@/lib/utils";
 
 type AmountInputProps = {
   value: string;
-  onChange: (value: string | undefined) => void;
+  onChange: (value: string | undefined, currency: string) => void;
   placeholder?: string;
   disabled?: boolean;
+  defaultCurrency?: 'INR' | 'USD' | 'EUR';
 };
 
 export const AmountInput = ({
@@ -21,7 +23,15 @@ export const AmountInput = ({
   onChange,
   placeholder,
   disabled,
+  defaultCurrency = 'INR',
 }: AmountInputProps) => {
+  const [currency, setCurrency] = useState<'INR' | 'USD' | 'EUR'>(defaultCurrency);
+  const currencySymbols: Record<'INR' | 'USD' | 'EUR', string> = {
+    INR: '₹',
+    USD: '$',
+    EUR: '€',
+  };
+
   const parsedValue = parseFloat(value);
   const isIncome = parsedValue > 0;
   const isExpense = parsedValue < 0;
@@ -30,7 +40,7 @@ export const AmountInput = ({
     if (!value) return;
 
     const reversedValue = parseFloat(value) * -1;
-    onChange(reversedValue.toString());
+    onChange(reversedValue.toString(), currency);
   };
 
   return (
@@ -59,14 +69,29 @@ export const AmountInput = ({
         </Tooltip>
       </TooltipProvider>
 
+      <select
+        value={currency}
+        onChange={(e) => {
+          const newCurrency = e.target.value as 'INR' | 'USD' | 'EUR';
+          setCurrency(newCurrency);
+          onChange(value, newCurrency);
+        }}
+        disabled={disabled}
+        className="absolute left-16 top-1.5 h-6 w-16 rounded-md border border-input bg-background px-1 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        <option value="INR">INR</option>
+        <option value="USD">USD</option>
+        <option value="EUR">EUR</option>
+      </select>
+
       <CurrencyInput
-        prefix="$"
-        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 pl-10 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+        prefix={currencySymbols[currency]}
+        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 pl-32 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
         placeholder={placeholder}
         value={value}
         decimalScale={2}
         decimalsLimit={2}
-        onValueChange={onChange}
+        onValueChange={(newValue) => onChange(newValue, currency)}
         disabled={disabled}
       />
 
