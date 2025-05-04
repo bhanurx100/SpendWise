@@ -4,25 +4,25 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 50 95% 90%; /* Black */
     --foreground: 222.2 84% 4.9%;
 
-    --card: 0 0% 100%;
+    --card: 900 45% 75%; /* sky-400 */
     --card-foreground: 222.2 84% 4.9%;
 
-    --popover: 0 0% 100%;
+    --popover: 200 95% 61%; /* sky-400 */
     --popover-foreground: 222.2 84% 4.9%;
 
     --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 210 40% 96.1%;
+    --secondary: 200 95% 61%; /* sky-400 */
     --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --muted: 210 40% 96.1%;
+    --muted: 200 95% 61%; /* sky-400 */
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 210 40% 96.1%;
+    --accent: 200 95% 61%; /* sky-400 */
     --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
@@ -72,5 +72,10 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Override the header gradient to use light green */
+  header.bg-gradient-to-b {
+    background-image: linear-gradient(to bottom, #266e1f, #266e1f) !important; /* green-300 to green-200 */
   }
 }
